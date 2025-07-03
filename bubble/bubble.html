@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bubble Animation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background:#32a89b;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .container-overlay {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: floatUp linear forwards;
+      animation-play-state: running;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+
+    /* Hover effect: stop all animations */
+    .paused .bubble {
+      animation-play-state: paused !important;
+    }
+
+    /* Only hovered bubble changes color */
+    .bubble:hover {
+      background-color: #ff69b4 !important;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-overlay" id="bubbleArea"></div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const bubbleArea = document.getElementById("bubbleArea");
+
+    // Random number generator
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // Bubble generator
+    function createBubble() {
+      const bubble = document.createElement("div");
+      const size = random(20, 60);
+      const left = random(0, window.innerWidth - size);
+
+      bubble.classList.add("bubble");
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${left}px`;
+      bubble.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      bubble.style.animationDuration = `${random(5, 10)}s`;
+
+      bubbleArea.appendChild(bubble);
+
+      // Remove bubble after it finishes animation
+      setTimeout(() => {
+        bubble.remove();
+      }, 10000);
+    }
+
+    // Generate bubbles every 300ms
+    setInterval(createBubble, 300);
+
+    // Stop all bubbles on mouseenter
+    bubbleArea.addEventListener("mouseenter", () => {
+      bubbleArea.classList.add("paused");
+    });
+
+    // Resume all bubbles on mouseleave
+    bubbleArea.addEventListener("mouseleave", () => {
+      bubbleArea.classList.remove("paused");
+    });
+  </script>
+</body>
+</html>
